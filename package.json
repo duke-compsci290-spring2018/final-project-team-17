@@ -1,0 +1,21 @@
+{
+  "name": "final",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Aditya and Jack",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "countup.js": "^1.9.3",
+    "express": "^4.16.2",
+    "fs-extra": "^5.0.0",
+    "mongodb": "^2.2.33",
+    "mustache": "^2.3.0",
+    "path": "^0.12.7",
+    "shortid": "^2.2.8"
+  }
+}

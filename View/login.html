@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Final</title>
+    <meta name="author" content="Aditya and Jack">
+    <script src="popper.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.2/bootstrap-slider.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/10.0.2/css/bootstrap-slider.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="index.js"></script>
+  </head>
+
+  <body>
+    <h1>Login</h1>
+    <div id="target">Loading...</div>
+    <div id="title-page">
+
+			<p>Enter your pin:</p>
+			<input type="text" maxlength="4" id="pin-input" pattern="\d{4}" required/>
+			<input id="pin-submit" type="submit" value="Submit">
+			<p id="msg"></p>
+		</div>
+
+    <div id="all-rels" class="text-center center-vertically">
+      <ul id="all-rels-ul">
+        <!-- <li class="bubble">AP</li>
+        <li class="bubble">CS</li> -->
+      </ul>
+    </div>
+
+    <div id="rel-graph" class="empty-graph text-center center-horizontally center-vertically">
+      <h1>You have no relationships added.</h1>
+      <h3 id="add-rel">Click here to add one</h3>
+
+    </div>
+
+    <div class="modal" id="new-rel-modal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title">Add a relationship to keep track of!</h1>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div id="new-rel-modal-body" class="modal-body">
+            <div id="create-rel-prompt">
+              <h3>Choose how you'd like to create a relationship:</h3>
+              <label for="new-rel-name">Name</label>
+          		<input type="text" id="new-rel-name">
+              <br>
+              <label for="new-rel-relation">Relation</label>
+          		<input type="text" id="new-rel-relation">
+              <p id="choose-quiz">Through a quick, 10-question multiple-choice survey</p>
+              <p id="choose-self">Rate relationship on a scale of -100 to 100</p>
+            </div>
+
+            <div id="slider-input">
+              <h2>Move the slider to rate your current relationship with this person</h2>
+              <input id="rate-slider" type="text" data-slider-min="-100" data-slider-max="100" data-slider-step="5" data-slider-value="0"/>
+              <span id="rate-slider-label">0    <span id="rate-slider-value">Neutral</span></span>
+            </div>
+
+            <div id="rel-quiz-prompt">
+              <h2>Click next question to begin!</h2>
+            </div>
+
+            <div id="rel-quiz">
+              <h3 id="question"></h3>
+              <h4 id="choice1" class="quiz-choice"></h4>
+              <h4 id="choice2" class="quiz-choice"></h4>
+              <h4 id="choice3" class="quiz-choice"></h4>
+              <h4 id="choice4" class="quiz-choice"></h4>
+              <h4 id="choice5" class="quiz-choice"></h4>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" id="prev-question-btn" class="modal-btn btn btn-primary">Previous question</button>
+            <button type="button" id="next-question-btn" class="modal-btn btn btn-primary">Next question</button>
+            <button type="button" id="finish-quiz-btn" class="modal-btn btn btn-primary">Finish</button>
+            <button type="button" id="finish-slider-btn" class="modal-btn btn btn-primary">Finish</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </body>
+</html>

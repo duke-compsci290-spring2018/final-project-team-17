@@ -1,0 +1,80 @@
+#create-an-account {
+  background-color: lightblue;
+  margin-top: 10%;
+  width: 300px;
+}
+
+.empty-graph {
+  background-color: #E9E9E9;
+  width: 600px;
+  height: 450px;
+}
+
+.empty-graph h1, h3 {
+  color: #B3B3B3;
+}
+
+.center-horizontally {
+  margin: auto;
+  width: 50%;
+}
+
+.center-vertically {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+#add-rel:hover {
+  color: black;
+}
+
+
+#slider-input {
+  display: none;
+}
+
+#prev-question-btn {
+  display: none;
+}
+
+#next-question-btn {
+  display: none;
+}
+
+#finish-quiz-btn {
+  display: none;
+}
+
+#finish-slider-btn {
+  display: none;
+}
+
+#rel-quiz-prompt {
+  display: none;
+}
+
+#rel-quiz {
+  display: none;
+}
+
+#all-rels-ul {
+
+}
+
+#all-rels-ul li {
+  float: left;
+}
+
+.bubble {
+  list-style-type: none;
+  border-radius: 50%;
+  background-color: green;
+  color: white;
+  margin: 20px;
+  width: 75px;
+  height: 75px;
+  line-height: 75px;
+  font-size: 30px;
+  text-align: center;
+}

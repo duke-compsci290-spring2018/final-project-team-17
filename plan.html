@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Final Project Topic</title>
+    <!-- Aditya Paruchuri (ap376) and Jack Dolinar (jrd44) -->
+
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="plan.css">
+  </head>
+
+  <body>
+    <!-- Tab code is from https://www.w3schools.com/howto/howto_js_tabs.asp -->
+    <!-- Tab links -->
+    <div class="tab">
+      <button id="defaultOpen" class="tablinks" onclick="openCity(event, 'design')">Design</button>
+      <button class="tablinks" onclick="openCity(event, 'data')">Functionality and Data</button>
+      <button class="tablinks" onclick="openCity(event, 'stack')">Stack</button>
+    </div>
+
+    <!-- Tab content -->
+    <div id="design" class="tabcontent">
+      <h3>Design</h3>
+      <br>
+      <p>We plan on having a single page application containing all of our functionality.</p>
+      <br>
+      <p>Upon arrival to the site, users will be prompted to login/signup, after which they will either see their current progress or a blank dashboard with indicators to help them get started (ex. flashing arrows and buttons).</p>
+      <br>
+      <p>The primary feature, which is the relationship tracker, will be the center console of the page (probably taking up 70% of the center of the screen). Other features will be fitted as panels on either side of the center. Clicking on a relationship will highlight or bring to attention any relevant information on either side of the screen.</p>
+      </p>
+    </div>
+    <div id="data" class="tabcontent">
+      <h3>Functionality and Data</h3>
+
+      <h4>The steps that we will take to build our application are as follows:</h4>
+      <ol>
+        <li>In building the application, first we will develop a database schema for our data.</li>
+        <li>We will then build read/write functionality for our database.</li>
+        <li>Next, we will create specific features to notify users to complete relationship boosting activities.</li>
+        <li>We will integrate user data into these features to update the “relationship quality” metric and improve push notifications (by updating a backend calendar, perhaps)</li>
+        <li>We will implement a quiz functionality that can be used to generate a “relationship quality” score</li>
+        <li>We will incorporate a feature to track items lent between acquaintances and friends</li>
+        <li>Then, we will implement all of these features in a beautiful UI.</li>
+      </ol>
+
+      <h4>Relationship Boosting</h4>
+      <p>For relationship boosting, we will allow new users to add people to their dashboard who they want to improve their relationship with.
+      <p>Each relationship that the user adds will have the following attributes:</p>
+      <ul>
+        <li>Name</li>
+        <li>Associativity (mother, sister, close friend, etc.)</li>
+        <li>Initial rating of closeness (slider scale of 1-100 [1 being worst and 100 being best]), OR</li>
+        <li>User can take a quiz to help him/her determine closeness with the relative/friend</li>
+        <li>Based on the answers to the questions, we determine the initial rating for them</li>
+      </ul>
+      <p>Inputs from user:</p>
+      <ul>
+        <li>Allow user to add interactions with each relationship (e.g. “text” or “email”)</li>
+        <li>Allow user to rate interactions</li>
+        <li>Allow user to provide a desription of a recent interaction</li>
+      </ul>
+
+      <h4>Calendar</h4>
+      <p>Users can sync their Google Calendar to allow our platform to select the best time that allows for ample social interaction with a friend or relative on the user's list.</p>
+      <p>Inputs would be:</p>
+      <ul>
+        <li>Dates and times of availability, OR</li>
+        <li>Manually-selected dates and times for availability</li>
+      </ul>
+
+      <h4>Lending</h4>
+      <p>Users can keep track of things/money that they've lent to someone or someone has lent to them.</h4>
+      <p>Data for this would be stored as:</p>
+      <ul>
+        <li>Whether or not item has been loaned to or lent</li>
+        <li>Name of person involved</li>
+        <li>Time since lending action</li>
+        <li>Approximate monetary value of lent object</li>
+      </ul>
+
+
+
+      <h4>Below is example data that might be stored in our database:</h4>
+      <p>User: Jack</p>
+      <p>New: false</p>
+      <p>Friend Name: Aditya</p>
+      <p>Associativity: Friend</p>
+      <p>Initial Rating: 67/100</p>
+      <p>Current Rating: 80/100</p>
+      <p>Goal Rating: 95/100</p>
+      <p>Notification Times: [  Sunday [0 0 0 0 0 0 0 0 0 0 0 0], Monday [0 0 0 0 2 0 0 0 0 0 0 0], Tuesday [0 0 0 0 0 0 0 1 0 0 0 0],  Wednesday [0 0 0 0 0 0 3 0 0 0 0 0],  Thursday [0 0 0 0 0 1 1 1 1 0 0 0],  Friday [0 0 0 0 0 0 0 0 0 0 0 0],  Saturday [0 0 0 0 0 0 0 0 0 0 0 0] ] (Might be JSON instead)</p>
+      <p>Selected Notification Time: Monday at 2 pm</p>
+      <p>Last Spoke On: xx/xx/xxxx at xx:xx</p>
+      <p>Last Interaction: Coffee</p>
+      <p>Last Interaction Duration: 0.5 hours</p>
+      <p>Last Interaction Rating: + 7/10</p>
+
+
+    </div>
+    <div id="stack" class="tabcontent">
+      <h3>Stack</h3>
+
+      <ul>
+        <li>Node.js - server that reads/writes data into database</li>
+        <li>Mongo.db - to store user data</li>
+        <li>Tensorflow.js - for machine learning algorithms</li>
+        <li>An undecided front-end framework (possibly Vue) - for binding data to UI in realtime, makes it easier to have a single-page website</li>
+        <li>Twilio - for text notifications (or maybe something simpler and free)</li>
+      </ul>
+
+
+      <p></p>
+    </div>
+  </body>
+  <script>
+    // https://www.w3schools.com/howto/howto_js_tabs.asp
+    document.getElementById("defaultOpen").click();
+
+    function openCity(evt, cityName) {
+      // Declare all variables
+      var i, tabcontent, tablinks;
+
+      // Get all elements with class="tabcontent" and hide them
+      tabcontent = document.getElementsByClassName("tabcontent");
+      for (i = 0; i < tabcontent.length; i++) {
+          tabcontent[i].style.display = "none";
+      }
+
+      // Get all elements with class="tablinks" and remove the class "active"
+      tablinks = document.getElementsByClassName("tablinks");
+      for (i = 0; i < tablinks.length; i++) {
+          tablinks[i].className = tablinks[i].className.replace(" active", "");
+      }
+
+      // Show the current tab, and add an "active" class to the button that opened the tab
+      document.getElementById(cityName).style.display = "block";
+      evt.currentTarget.className += " active";
+    }
+
+  </script>
+
+</html>
