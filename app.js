@@ -29,9 +29,18 @@ MongoClient.connect("mongodb://aditya:aditya123@ds155577.mlab.com:55577/cs290-fi
   });
 });
 
-app.get('/',function(req,res){
+app.get('/',function(req, res){
   res.sendFile('index.html');
 });
+
+app.get('/guest',function(req, res){
+  res.sendFile(__dirname + '/View/guest.html');
+});
+
+app.get('/admin',function(req, res){
+  res.sendFile(__dirname + '/View/admin.html');
+});
+
 
 // app.get("/:userid", function(req, res) {
 //   db.collection("users").findOne({ "username": req.params.userid }, function(err, doc) {
@@ -103,7 +112,7 @@ app.post("/login", function(req, res) {
               res.send({"status": false, "reason": "Unknown error.", "locked" : false})
             } else {
               console.log(newDoc);
-              res.send({"status": true, "reason": "Successful login.", "locked": false, "login-diff" : diff, userdata: doc});
+              res.send({"status": true, "reason": "Successful login.", "locked": false, "login-diff" : diff, "userdata": doc});
             }
           });
 
@@ -144,6 +153,27 @@ app.post("/login", function(req, res) {
   });
 });
 
+app.post("/admin-login", function(req, res) {
+  var pin = req.body.pin;
+  db.collection("users").findOne({username : "admin"}, function(err, doc) {
+    if (err) {
+      console.log("Error in login. Admin not found.");
+      process.exit(1);
+    } else {
+        console.log(doc)
+        var newDoc = doc;
+        if (doc["pin"] == pin) {
+          db.collection("users").find({}).toArray(function (err, docs) {
+            if (err) throw err;
+            res.send({"status": true, "reason": "Successful admin login.", "userdata": docs});
+          });
+        } else if (doc["pin"] != pin) {
+          res.send({"status": false, "reason": "Failed to login admin", "userdata": null});
+        }
+    }
+  });
+});
+
 app.post("/new-relation", function(req, res) {
   var rel_score = req.body.score;
   var rel_name = req.body.name;
@@ -168,7 +198,8 @@ app.post("/new-relation", function(req, res) {
             "activity": ["Initial"],
             "time": [date],
             "score": [rel_score]
-          }
+          },
+          "scheduled-interactions": []
         })
         db.collection("users").updateOne({_id : doc["_id"]}, doc, function(err, data) {
           if (err) {
@@ -177,6 +208,33 @@ app.post("/new-relation", function(req, res) {
           } else {
             console.log(doc);
             res.send({"success": true, "msg": "New relation successfully added!", "user_info": data});
+          }
+        });
+      }
+    }
+  });
+});
+
+app.post("/update-relation", function(req, res) {
+  var rel_usn = req.body.username;
+  var updated_rels = req.body.doc;
+  console.log(rel_usn)
+  db.collection("users").findOne({"username":  rel_usn}, function(err, doc) {
+    if (err) {
+      handleError(res, err.message, "Failed to get user");
+    } else {
+      if (doc == null) {
+        console.log("User not found");
+      } else {
+        doc.user_info.rels = updated_rels;
+        var return_doc = doc;
+        db.collection("users").updateOne({_id : doc["_id"]}, doc, function(err, data) {
+          console.log("DATA: ", data)
+          if (err) {
+            console.log("There was an error updating a record " + err);
+            res.send({"success": false, "msg": "Failed to schedule interaction"})
+          } else {
+            res.send({"success": true, "msg": "Successfully scheduled interaction!", "user_info": return_doc});
           }
         });
       }

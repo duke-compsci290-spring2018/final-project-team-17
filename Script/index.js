@@ -3,6 +3,9 @@ var rels = [];
 var current_question = -1;
 var scores = new Array(10).fill(null);
 var current_username = "";
+var chosen_date;
+var selected_name = "";
+var selected_name_index = 0;
 
 var quiz_questions = [
   {
@@ -175,6 +178,10 @@ $(document).ready(function() {
     });
   })
 
+  $("#new-rel-btn").click(function() {
+    $("#new-rel-modal").modal("show");
+  })
+
   $("#rate-slider").slider();
   $("#rate-slider").on("slide", function(slideEvt) {
   	$("#rate-slider-label").text(slideEvt.value);
@@ -206,7 +213,7 @@ $(document).ready(function() {
         reset_quiz_modal()
       }
       user_info = msg.user_info;
-      rels = user_info.user_info.rels;
+      rels = user_info.rels;
       updateGraph();
     });
   })
@@ -215,9 +222,67 @@ $(document).ready(function() {
     reset_quiz_modal()
   })
 
-  function showDashboard() {
+  $('#datepicker').daterangepicker({
+    "singleDatePicker": true,
+    "drops": "up"
+  }, function(start, end, label) {
+    chosen_date = start.format('YYYY-MM-DD')
+    console.log(new Date(chosen_date));
+    // console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
+  });
 
-  }
+  $(document).on('click', '#schedule-interaction', function() {
+    var selected_interaction = $("#all-interactions option:selected").text();
+    if (selected_interaction == "Select an interaction") {
+      alert("Please select an interaction in the dropdown list!");
+    } else {
+      var point_value = 0;
+      if (selected_interaction[selected_interaction.length - 2] == "-") {
+        point_value = -parseInt(selected_interaction[selected_interaction.length - 1])
+      } else {
+        point_value = parseInt(selected_interaction[selected_interaction.length - 1]);
+      }
+      rels[selected_name_index]["interactions"].activity.push(selected_interaction.split(",")[0]);
+      rels[selected_name_index]["interactions"].time.push(new Date(chosen_date));
+      rels[selected_name_index]["interactions"].score.push(point_value);
+
+      $.ajax({
+        method: "POST",
+        url: "/update-relation",
+        data: { "username": current_username, "doc": rels }
+      }).done(function(msg) {
+        if (msg.success) {
+          alert(msg.msg);
+          user_info = msg["user_info"];
+          rels = user_info["user_info"]["rels"];
+          console.log(user_info)
+          console.log(rels)
+
+          updateInteractionGraph()
+        }
+      });
+    }
+
+  })
+
+  $(document).on('click', '.bubble', function() {
+    selected_name = $(this).data('original-title').split("<strong>")[1].split("</strong>")[0];
+    console.log(selected_name)
+    selected_name_index = 0;
+    var j = 0;
+    rels.forEach(function(rel) {
+      if (rel.name == selected_name) {
+        console.log("matched")
+        selected_name_index = j;
+        console.log(selected_name_index);
+
+
+        updateInteractionGraph();
+      }
+      j++;
+    })
+    $("#rel-modal").modal("show");
+  })
 
   function showQuestions() {
     if (current_question == quiz_questions.length - 1) {
@@ -252,6 +317,7 @@ $(document).ready(function() {
     $(".modal-btn").hide();
   }
 
+
   function reset_quiz_modal() {
     hide_all_quiz_modal()
     current_question = -1;
@@ -263,9 +329,10 @@ $(document).ready(function() {
     var all_rels = $("#all-rels");
     rels.forEach(function(rel) {
       var name_arr = rel.name.trim().split(" ");
-      var tooltip_text = "<p><strong>" + rel.name + "</strong></p><p>Type: " + rel.relation + "</p><p>Score: " + rel.score + "</p>"
+
+      var tooltip_text = "<strong>" + rel.name + "</strong></p><p>Type: " + rel.relation + "</p><p>Score: " + rel.score + "</p>"
       if (name_arr.length === 1) {
-        all_rels.append("<li class='bubble' data-toggle='tooltip' data-placement='top' data-original-title='" + tooltip_text + "'>" + name_arr + "</li>");
+        all_rels.append("<li class='bubble' data-toggle='tooltip' data-placement='top' data-original-title='" + tooltip_text + "'>" + name_arr[0][0] + "</li>");
 
       } else if (name_arr.length > 1) {
         var name_split = rel.name.split(" ");
@@ -273,6 +340,8 @@ $(document).ready(function() {
         var lname = name_split[name_split.length - 1][0];
         all_rels.append("<li class='bubble' data-toggle='tooltip' data-placement='top' data-original-title='" + tooltip_text + "'>" + fname + lname + "</li>")
       }
+
+
       $('[data-toggle="tooltip"]').tooltip({html:true});
 
     })
@@ -284,7 +353,7 @@ $(document).ready(function() {
       var scores = [];
       rels.forEach(function(rel) {
         names.push(rel.name);
-        scores.push(rel.score)
+        scores.push(rel.score);
       })
 
       var data = [
@@ -299,6 +368,25 @@ $(document).ready(function() {
       Plotly.newPlot('rel-graph', data);
 
     }
+  }
+
+  function updateInteractionGraph() {
+    var score_arr = [];
+    var cum_score = 0;
+    for (var i = 0; i < rels[selected_name_index].interactions.score.length; i++) {
+      cum_score += parseInt(rels[selected_name_index].interactions.score[i]);
+      score_arr.push(cum_score)
+    }
+    console.log(score_arr)
+    var selected_data = [
+      {
+        x: rels[selected_name_index].interactions.time,
+        y: score_arr,
+        type: 'scatter'
+      }
+    ]
+    $("#rel-plot").html("");
+    Plotly.newPlot('rel-plot', selected_data);
   }
 
 

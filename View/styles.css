@@ -58,23 +58,44 @@
   display: none;
 }
 
-#all-rels-ul {
-
+#all-rels-ul li {
+  display: inline;
 }
 
-#all-rels-ul li {
-  float: left;
+
+@keyframes flash {
+  from {
+    width: 75px;
+    height: 75px;
+  }
+
+  to {
+    width: 90px;
+    height: 90px;
+  }
 }
 
 .bubble {
+  float: left;
   list-style-type: none;
+  display: inline;
   border-radius: 50%;
   background-color: green;
   color: white;
-  margin: 20px;
+  margin: 40px;
   width: 75px;
   height: 75px;
   line-height: 75px;
   font-size: 30px;
-  text-align: center;
+}
+
+.flashing-bubble {
+  animation-duration: 0.4s;
+  animation-name: flash;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+#intr-table {
+  display: none;
 }
