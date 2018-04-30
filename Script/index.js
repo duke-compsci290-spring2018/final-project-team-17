@@ -313,11 +313,9 @@ $(document).ready(function() {
             updateRels();
 
 			    } else if (!msg["status"] && !msg["locked"]) {
-			    	console.log("Incorrect pin!");
-			    	document.getElementById("msg").innerHTML = msg["reason"];
+			    	alert("Incorrect pin!");
 			    } else {
-			    	console.log("Account locked!");
-			    	document.getElementById("msg").innerHTML = msg["reason"];
+			    	alert("Account locked!");
 			    }
 			});
 		}
@@ -417,10 +415,6 @@ $(document).ready(function() {
       }).done(function(msg) {
         if (msg.success) {
           alert(msg.msg);
-          user_info = msg["user_info"];
-          rels = user_info["user_info"]["rels"];
-          console.log(user_info)
-          console.log(rels)
 
           updateInteractionGraph();
           updateLendingTable();
@@ -444,7 +438,7 @@ $(document).ready(function() {
       rels[selected_name_index]["interactions"].activity.push(selected_interaction.split(",")[0]);
       rels[selected_name_index]["interactions"].time.push(new Date(chosen_date));
       rels[selected_name_index]["interactions"].score.push(point_value);
-
+      console.log("updated")
       $.ajax({
         method: "POST",
         url: "/update-relation",
@@ -452,10 +446,6 @@ $(document).ready(function() {
       }).done(function(msg) {
         if (msg.success) {
           alert(msg.msg);
-          user_info = msg["user_info"];
-          rels = user_info["user_info"]["rels"];
-          console.log(user_info)
-          console.log(rels)
 
           updateRels();
           updateGraph();
@@ -475,8 +465,6 @@ $(document).ready(function() {
     }).done(function(msg) {
       if (msg.success) {
         alert(msg.msg);
-        user_info = msg["user_info"];
-        rels = user_info["user_info"]["rels"];
 
         $('#rel-model').modal('hide');
         updateRels();
@@ -613,13 +601,17 @@ $(document).ready(function() {
 
   function updateLendingTable() {
     var lends = rels[selected_name_index]["lend"];
-    console.log(rels[selected_name_index]);
-    if (lends.length > 0) {
-      $("#lending-tbody").html("");
-      lends.forEach(function(item) {
-        $("#lending-tbody").append("<tr><td>" + item.item + "</td><td>" + item["action"] + "</td><td><button id='delete-lent-item' class='btn btn-primary' type='button'>Remove</button></td></tr>");
-      })
-      $("#lending-table").show();
+    if (lends) {
+      if (lends.length > 0) {
+        console.log("lots of lends")
+        $("#lending-tbody").html("");
+        lends.forEach(function(item) {
+          $("#lending-tbody").append("<tr><td>" + item.item + "</td><td>" + item["action"] + "</td><td><button id='delete-lent-item' class='btn btn-primary' type='button'>Remove</button></td></tr>");
+        })
+        $("#lending-table").show();
+      } else {
+        $("#lending-table").hide();
+      }
     } else {
       $("#lending-table").hide();
     }
@@ -647,8 +639,6 @@ $(document).ready(function() {
     }).done(function(msg) {
       if (msg.success) {
         alert(msg.msg);
-        user_info = msg["user_info"];
-        rels = user_info["user_info"]["rels"];
 
         $('#rel-model').modal('hide');
         updateRels();

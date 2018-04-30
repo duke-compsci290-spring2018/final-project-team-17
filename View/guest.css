@@ -1,3 +1,3 @@
 body {
-  background-image: url("guest-bg.jpg");
+  background: url("guest-bg.jpg") center center fixed;
 }

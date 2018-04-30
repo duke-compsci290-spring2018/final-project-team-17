@@ -200,7 +200,7 @@ app.post("/new-relation", function(req, res) {
 
 app.post("/update-relation", function(req, res) {
   var rel_usn = req.body.username;
-  var updated_rels = req.body.doc;
+  var updated_rels = req.body["doc"];
   db.collection("users").findOne({"username":  rel_usn}, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to get user");
@@ -210,12 +210,12 @@ app.post("/update-relation", function(req, res) {
       } else {
         doc.user_info.rels = updated_rels;
         var return_doc = doc;
-        db.collection("users").updateOne({_id : doc["_id"]}, doc, function(err, data) {
+        db.collection("users").updateOne({_id : doc["_id"]}, {$set: {"rels": updated_rels}}, function(err, data) {
           if (err) {
             console.log("There was an error updating a record " + err);
             res.send({"success": false, "msg": "Failed to schedule interaction"})
           } else {
-            res.send({"success": true, "msg": "Successfully scheduled interaction!", "user_info": return_doc});
+            res.send({"success": true, "msg": "Successfully scheduled interaction!"});
           }
         });
       }
