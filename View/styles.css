@@ -1,7 +1,10 @@
 #create-an-account {
-  background-color: lightblue;
+  /* background-color: lightblue; */
+  background: rgba(225, 225, 225, .8);
   margin-top: 10%;
   width: 300px;
+  color: white;
+  font-weight: bolder;
 }
 
 .empty-graph {
@@ -58,22 +61,25 @@
   display: none;
 }
 
+#all-rels {
+  display: none;
+  width: 100%;
+}
+
+#rel-graph {
+  display: none;
+  margin-top: 150px;
+  width: 60%;
+}
+
+#all-rels-ul {
+  background-color: gray;
+}
+
 #all-rels-ul li {
   display: inline;
 }
 
-
-@keyframes flash {
-  from {
-    width: 75px;
-    height: 75px;
-  }
-
-  to {
-    width: 90px;
-    height: 90px;
-  }
-}
 
 .bubble {
   float: left;
@@ -97,5 +103,45 @@
 }
 
 #intr-table {
+  display: none;
+}
+
+#bg-video {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+}
+
+#create-an-account-container, #login-container {
+  position: absolute;
+  margin-left: 50%;
+  margin-top: 10%;
+  margin-right: 10%;
+
+}
+
+#guest-redirect {
+  top: 10px;
+  right: 10px;
+  position: absolute;
+  background-color: transparent;
+  border: 2px solid lightblue;
+  width: 250px;
+  height: 40px;
+  font-size: 20px;
+  color: lightgreen;
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+}
+
+#guest-redirect:hover {
+  border: 2px solid lightblue;
+  background-color: lightgreen;
+  color: white;
+}
+
+#lending-table {
   display: none;
 }

@@ -20,32 +20,43 @@
 
   <body>
     <h1>Login</h1>
-    <div id="target">Loading...</div>
-    <div id="title-page">
+    <video autoplay muted loop id="bg-video">
+      <source src="bg-video.mp4" type="video/mp4">
+    </video>
 
-			<p>Enter your pin:</p>
-			<input type="text" maxlength="4" id="pin-input" pattern="\d{4}" required/>
-			<input id="pin-submit" type="submit" value="Submit">
-			<p id="msg"></p>
-		</div>
 
-    <div id="all-rels" class="text-center center-vertically">
-      <ul id="all-rels-ul">
-        <!-- <li class="bubble">AP</li>
-        <li class="bubble">CS</li> -->
-      </ul>
+    <div id="login-container">
+      <div id="login-box">
+
+  			<p>Enter your pin:</p>
+  			<input type="text" maxlength="4" id="pin-input" pattern="\d{4}" required/>
+  			<input id="pin-submit" type="submit" value="Submit">
+  			<p id="msg"></p>
+  		</div>
     </div>
 
+
+    <div id="all-rels" class="text-center">
+      <ul id="all-rels-ul"></ul>
+      <br>
+      <button type="button" class="btn btn-primary" id="new-rel-btn"></button>
+    </div>
+
+
+    <br>
     <div id="rel-graph" class="empty-graph text-center center-horizontally center-vertically">
-      <h1>You have no relationships added.</h1>
-      <h3 id="add-rel">Click here to add one</h3>
+      <div id="rel-graph-img" class="center-horizontally">
 
+      </div>
+      <div id="no-rels-box" class="no-rels center-horizontally center-vertically">
+        <h1>You have no relationships added.</h1>
+        <h3 id="add-rel">Click here to add one</h3>
+      </div>
     </div>
 
-    <button type="button" class="btn btn-primary" id="new-rel-btn"></button>
     <div class="modal" id="new-rel-modal" tabindex="-1" role="dialog">
       <div class="modal-dialog" role="document">
-        <div class="modal-content">
+        <div class="modal-lg modal-content">
           <div class="modal-header">
             <h1 class="modal-title">Add a relationship to keep track of!</h1>
             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -61,13 +72,6 @@
               <label for="new-rel-relation">Relation</label>
           		<input type="text" id="new-rel-relation">
               <p id="choose-quiz">Through a quick, 10-question multiple-choice survey</p>
-              <p id="choose-self">Rate relationship on a scale of -100 to 100</p>
-            </div>
-
-            <div id="slider-input">
-              <h2>Move the slider to rate your current relationship with this person</h2>
-              <input id="rate-slider" type="text" data-slider-min="-100" data-slider-max="100" data-slider-step="5" data-slider-value="0"/>
-              <span id="rate-slider-label">0    <span id="rate-slider-value">Neutral</span></span>
             </div>
 
             <div id="rel-quiz-prompt">
@@ -87,7 +91,6 @@
             <button type="button" id="prev-question-btn" class="modal-btn btn btn-primary">Previous question</button>
             <button type="button" id="next-question-btn" class="modal-btn btn btn-primary">Next question</button>
             <button type="button" id="finish-quiz-btn" class="modal-btn btn btn-primary">Finish</button>
-            <button type="button" id="finish-slider-btn" class="modal-btn btn btn-primary">Finish</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
           </div>
         </div>
@@ -104,26 +107,8 @@
             </button>
           </div>
           <div id="rel-modal-body" class="modal-body">
-            <div id="rel-plot">
-
-            </div>
-            <div id="scheduled-interactions">
-
-              <table id="intr-table">
-                <thead>
-                  <tr>
-                    <td>Interaction Type</td>
-                    <td>Scheduled Date</td>
-                    <td>Point Value</td>
-                    <td></td>
-                  <tr>
-                </thead>
-                <tbody id="intr-tbody">
-
-                </tbody>
-
-              </table>
-            <div>
+            <div id="rel-plot"></div>
+            <br>
             <div class="container">
               <div class="row">
                 <div class="col-lg-6">
@@ -142,23 +127,58 @@
                     <option>Toxic Conversation, -5</option>
                   </select>
                   <br>
+                  <br>
                   <div>
                     <input id="datepicker" type="text" name="datetimes" />
                   </div>
                 </div>
                 <div class="col-lg-6">
-                  <button type="button" class="btn btn-primary" id="schedule-interaction">Schedule Interaction</button>
+                  <button type="button" class="btn btn-primary" id="schedule-interaction">Add Interaction</button>
                 </div>
-
               </div>
+            </div>
+            <br>
+            <div class = "container">
+              <table id="lending-table">
+                <thead>
+                  <tr>
+                    <td>Item Lent</td>
+                    <td>Lending Action</td>
+                    <td></td>
+                  </tr>
+                </thead>
+                <tbody id="lending-tbody">
 
-
+                </tbody>
+              </table>
+            </div>
+            <br>
+            <div class="container">
+              <div class="row">
+                <div class="col-lg-6">
+                  <select id="lent-options">
+                    <option>Select the lending action</option>
+                    <option>Lent to you</option>
+                    <option>You lent</option>
+                  </select>
+                  <br>
+                  <br>
+                  <div>
+                    <input id="item-lent" type="text" placeholder="ex. wheelbarrow" />
+                  </div>
+                </div>
+                <div class="col-lg-6">
+                  <button type="button" class="btn btn-primary" id="add-lend">Add item lent</button>
+                </div>
+              </div>
             </div>
 
 
           </div>
           <div class="modal-footer">
+            <button type="button" id="delete-rel" class="modal-btn btn btn-warning">Delete Relationship</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+
           </div>
         </div>
       </div>

@@ -12,37 +12,36 @@
   </head>
 
   <body>
-    <div id="top-bar">
+    <video autoplay muted loop id="bg-video">
+      <source src="bg-video.mp4" type="video/mp4">
+    </video>
 
-    </div>
+    <a href="guest.html">
+      <button id="guest-redirect" type="button" class="btn btn-outline-success">See how it works!</button>
+    </a>
 
-    <div class="container">
-      <div class="row">
-        <div style="text-align: center;" class="">
-          <div id="create-an-account" class="text-center">
-            <p>First name:</p>
-        		<br>
-        		<input type="text" id="first-name">
-        		<br>
-        		<p>Last name:</p>
-        		<br>
-        		<input type="text" id="last-name">
-        		<br>
-        		<p>Enter a 4-digit pin:</p>
-        		<br>
-        		<input type="text"  name="pincode" maxlength="4"  id="pin" pattern="\d{4}" required/>
-        		<br>
-        		<p>Confirm pin:</p>
-         		<input type="text"  name="pincode" maxlength="4"  id="pin-confirm" pattern="\d{4}" required/>
-        		<br>
-        		<br>
-        		<input id="signup-submit" type="submit" value="Submit">
+    <div id="create-an-account-container" class="center-horizontally center-vertically">
+      <div id="create-an-account" class="text-center">
+        <p>First name:</p>
+        <br>
+        <input type="text" id="first-name">
+        <br>
+        <p>Last name:</p>
+        <br>
+        <input type="text" id="last-name">
+        <br>
+        <p>Enter a 4-digit pin:</p>
+        <br>
+        <input type="text" name="pincode" maxlength="4" id="pin" pattern="\d{4}" required/>
+        <br>
+        <p>Confirm pin:</p>
+        <input type="text" name="pincode" maxlength="4" id="pin-confirm" pattern="\d{4}" required/>
+        <br>
+        <br>
+        <input id="signup-submit" type="submit" value="Submit">
 
-          </div>
-        </div>
       </div>
     </div>
-
 
   </body>
 </html>

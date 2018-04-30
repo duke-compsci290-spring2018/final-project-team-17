@@ -82,6 +82,181 @@ var quiz_questions = [
         "value": 0
       }
     ]
+  },
+  {
+    "question": "Do you feel comfortable sharing meaningful thoughts with this person?",
+    "choices": [
+      {
+        "choice": "that is practically all of our communication",
+        "value": 7
+      },
+      {
+        "choice": "sometimes, if we’re having a great moment",
+        "value": 4
+      },
+      {
+        "choice": "if they share first",
+        "value": 1
+      },
+      {
+        "choice": "I don’t know this person well enough to make that leap just yet",
+        "value": 0
+      },
+      {
+        "choice": "I’m not sure this person has deep thoughts worth sharing",
+        "value": -3
+      }
+    ]
+  },
+  {
+    "question": "Do you feel comfortable sharing secrets, worries or fears with this person?",
+    "choices": [
+      {
+        "choice": "always",
+        "value": 10
+      },
+      {
+        "choice": "sometimes, as long as they aren’t involved in the secret, worry or fear",
+        "value": 5
+      },
+      {
+        "choice": "maybe, I’ve never thought about sharing something like that with them",
+        "value": 0
+      },
+      {
+        "choice": "not really, they aren’t interested in listening to my problems",
+        "value": -5
+      },
+      {
+        "choice": "I tried once and they were really mean about it",
+        "value": -10
+      }
+    ]
+  },
+  {
+    "question": "If or when you spend time together, you imagine you would be...",
+    "choices": [
+      {
+        "choice": "Sharing a meal or drinks and conversation",
+        "value": 7
+      },
+      {
+        "choice": "Cooking or participating in another team activity",
+        "value": 7
+      },
+      {
+        "choice": "Running errands, studying or doing our own tasks in the same space",
+        "value": 3
+      },
+      {
+        "choice": "Watching movies or television, playing video or board games",
+        "value": 3
+      },
+      {
+        "choice": "On our phones",
+        "value": 0
+      }
+    ]
+  },
+  {
+    "question": "Without thinking too much, choose the feeling or action you most associate with this person:",
+    "choices": [
+      {
+        "choice": "loving kindness and positivity",
+        "value": 10
+      },
+      {
+        "choice": "laughter and jokes",
+        "value": 7
+      },
+      {
+        "choice": "deep conversation and insight",
+        "value": 7
+      },
+      {
+        "choice": "um...",
+        "value": 0
+      },
+      {
+        "choice": "negativity and complaining",
+        "value": -10
+      }
+    ]
+  },
+  {
+    "question": "Do you admire and respect this person’s accomplishments and goals?",
+    "choices": [
+      {
+        "choice": "Yes, a lot! They have all their ducks in a row.",
+        "value": 7
+      },
+      {
+        "choice": "They seem to have an idea of where they’re going in life",
+        "value": 5
+      },
+      {
+        "choice": "I feel we’re about on the same level, so yeah",
+        "value": 5
+      },
+      {
+        "choice": "I don’t know them well enough to make an informed decision",
+        "value": 0
+      },
+      {
+        "choice": "Not really",
+        "value": -5
+      }
+    ]
+  },
+  {
+    "question": "Will you be friends with this person five years from now?",
+    "choices": [
+      {
+        "choice": "Definitely!",
+        "value": 10
+      },
+      {
+        "choice": "Most likely, unless something changes",
+        "value": 6
+      },
+      {
+        "choice": "I hope so",
+        "value": 3
+      },
+      {
+        "choice": "Too soon to know for sure",
+        "value": 0
+      },
+      {
+        "choice": "Definitely not",
+        "value": -7
+      }
+    ]
+  },
+  {
+    "question": "How important is it to you to keep in touch",
+    "choices": [
+      {
+        "choice": "Vital",
+        "value": 10
+      },
+      {
+        "choice": "Pretty important",
+        "value": 7
+      },
+      {
+        "choice": "I would like to keep in touch",
+        "value": 4
+      },
+      {
+        "choice": "It’s really up to them",
+        "value": 0
+      },
+      {
+        "choice": "Get them out of my life!",
+        "value": -10
+      }
+    ]
   }
 ]
 
@@ -129,6 +304,11 @@ $(document).ready(function() {
             current_username = user_info.username;
             console.log(rels);
             if (rels.length > 0) {
+              $("#login-container").hide(function() {
+                $("video").hide();
+                $("#all-rels").show();
+                $("#rel-graph").show();
+              })
               updateGraph();
               updateRels();
             }
@@ -171,21 +351,10 @@ $(document).ready(function() {
 
   })
 
-  $("#choose-self").click(function() {
-    $("#create-rel-prompt").hide(function() {
-      $("#slider-input").show();
-      $("#finish-slider-btn").show();
-    });
-  })
-
   $("#new-rel-btn").click(function() {
     $("#new-rel-modal").modal("show");
   })
 
-  $("#rate-slider").slider();
-  $("#rate-slider").on("slide", function(slideEvt) {
-  	$("#rate-slider-label").text(slideEvt.value);
-  });
 
   $("#add-rel").click(function() {
     $("#new-rel-modal").modal("show");
@@ -230,6 +399,36 @@ $(document).ready(function() {
     console.log(new Date(chosen_date));
     // console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');
   });
+  $(document).on('click', '#add-lend', function() {
+    var selected_lending_action = $("#lent-options option:selected").text();
+    var selected_item =  $("#item-lent").val();
+
+    if (selected_lending_action == "Select the lending action" || selected_item.length <= 0) {
+      alert("Please select a lending action in the dropdown list and enter what was lent!");
+    } else {
+      rels[selected_name_index]["lend"].push({
+        "action": selected_lending_action,
+        "item": selected_item
+      })
+      $.ajax({
+        method: "POST",
+        url: "/update-relation",
+        data: { "username": current_username, "doc": rels }
+      }).done(function(msg) {
+        if (msg.success) {
+          alert(msg.msg);
+          user_info = msg["user_info"];
+          rels = user_info["user_info"]["rels"];
+          console.log(user_info)
+          console.log(rels)
+
+          updateInteractionGraph();
+          updateLendingTable();
+        }
+      });
+    }
+
+  })
 
   $(document).on('click', '#schedule-interaction', function() {
     var selected_interaction = $("#all-interactions option:selected").text();
@@ -258,11 +457,33 @@ $(document).ready(function() {
           console.log(user_info)
           console.log(rels)
 
+          updateRels();
+          updateGraph();
           updateInteractionGraph()
         }
       });
     }
 
+  })
+
+  $(document).on('click', '#delete-rel', function() {
+    rels.splice(selected_name_index, 1);
+    $.ajax({
+      method: "POST",
+      url: "/update-relation",
+      data: { "username": current_username, "doc": rels }
+    }).done(function(msg) {
+      if (msg.success) {
+        alert(msg.msg);
+        user_info = msg["user_info"];
+        rels = user_info["user_info"]["rels"];
+
+        $('#rel-model').modal('hide');
+        updateRels();
+        updateGraph();
+        updateInteractionGraph();
+      }
+    });
   })
 
   $(document).on('click', '.bubble', function() {
@@ -272,11 +493,9 @@ $(document).ready(function() {
     var j = 0;
     rels.forEach(function(rel) {
       if (rel.name == selected_name) {
-        console.log("matched")
         selected_name_index = j;
         console.log(selected_name_index);
-
-
+        updateLendingTable();
         updateInteractionGraph();
       }
       j++;
@@ -311,7 +530,6 @@ $(document).ready(function() {
   }
 
   function hide_all_quiz_modal() {
-    $("#slider-input").hide();
     $("#rel-quiz-prompt").hide();
     $("#rel-quiz").hide();
     $(".modal-btn").hide();
@@ -326,7 +544,8 @@ $(document).ready(function() {
   }
 
   function updateRels() {
-    var all_rels = $("#all-rels");
+    $("#all-rels-ul").html("");
+    var all_rels = $("#all-rels-ul");
     rels.forEach(function(rel) {
       var name_arr = rel.name.trim().split(" ");
 
@@ -342,7 +561,7 @@ $(document).ready(function() {
       }
 
 
-      $('[data-toggle="tooltip"]').tooltip({html:true});
+      $('[data-toggle="tooltip"]').tooltip({html: true});
 
     })
   }
@@ -364,8 +583,11 @@ $(document).ready(function() {
         }
       ]
       console.log(data)
-      $("#rel-graph").html("");
-      Plotly.newPlot('rel-graph', data);
+      $("#no-rels-box").hide(function() {
+        $("#rel-graph").removeClass("empty-graph");
+        Plotly.newPlot('rel-graph-img', data);
+      })
+
 
     }
   }
@@ -389,6 +611,51 @@ $(document).ready(function() {
     Plotly.newPlot('rel-plot', selected_data);
   }
 
+  function updateLendingTable() {
+    var lends = rels[selected_name_index]["lend"];
+    if (lends.length > 0) {
+      $("#lending-tbody").html("");
+      lends.forEach(function(item) {
+        $("#lending-tbody").append("<tr><td>" + item.item + "</td><td>" + item["action"] + "</td><td><button id='delete-lent-item' class='btn btn-primary' type='button'>Remove</button></td></tr>");
+      })
+      $("#lending-table").show();
+    } else {
+      $("#lending-table").hide();
+    }
+  }
+
+  $(document).on('click', '#delete-lent-item', function(button) {
+    removeLentItem(button.target);
+  })
+
+  function removeLentItem(item) {
+    var remove_item = $(item).parent().parent().find("td:first-child").text();
+    console.log(remove_item)
+    for (var i = 0; i < rels[selected_name_index]["lend"].length; i++) {
+      if (remove_item == rels[selected_name_index]["lend"][i].item) {
+        console.log("now")
+        rels[selected_name_index]["lend"].splice(i, 1);
+      }
+    }
+    $.ajax({
+      method: "POST",
+      url: "/update-relation",
+      data: { "username": current_username, "doc": rels }
+    }).done(function(msg) {
+      if (msg.success) {
+        alert(msg.msg);
+        user_info = msg["user_info"];
+        rels = user_info["user_info"]["rels"];
+
+        $('#rel-model').modal('hide');
+        updateRels();
+        updateGraph();
+        updateLendingTable();
+        updateInteractionGraph();
+      }
+    });
+
+  }
 
 
 })

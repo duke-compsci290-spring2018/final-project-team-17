@@ -63,8 +63,7 @@ app.post("/create-account", function(req, res) {
   // var code = new ObjectID();
   var id = firstname[0] + lastname[0] + shortid.generate();
   var user_info = {
-    rels: [],
-    lend: []
+    rels: []
   }
   db.collection("users").insertOne({"username": id, "firstname" : firstname, "lastname" : lastname, "pin" : pin, "failed-login-attempts" : 0, "locked" : false, "last-login": new Date(), "last-locked": "", "user_info" : user_info}, function(err) {
     if (err) {
@@ -194,6 +193,7 @@ app.post("/new-relation", function(req, res) {
           "score": rel_score,
           "added": date,
           "last_interaction": null,
+          "lend": [],
           "interactions": {
             "activity": ["Initial"],
             "time": [date],
@@ -241,3 +241,28 @@ app.post("/update-relation", function(req, res) {
     }
   });
 });
+
+app.post("/unlock-user", function(req, res) {
+  var lock_user = req.body.username;
+  lock_status = req.body.lock_status = "false" ? false : true;
+  var lock_status = req.body.lock_status;
+  db.collection("users").findOne({"username":  lock_user}, function(err, doc) {
+    if (err) {
+      handleError(res, err.message, "Failed to get user");
+    } else {
+      if (doc == null) {
+        console.log("User not found");
+      } else {
+        db.collection("users").update({_id : doc["_id"]}, {$set: {"locked": lock_status}} , function(err, data) {
+          if (err) {
+            console.log("There was an error updating a record " + err);
+            res.send({"success": false, "msg": "Failed to toggle user's lock status"})
+          } else {
+            res.send({"success": true, "msg": "Successfully toggled user's lock status!"});
+          }
+        });
+      }
+    }
+  });
+
+})
