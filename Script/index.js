@@ -262,7 +262,6 @@ var quiz_questions = [
 
 $(document).ready(function() {
   $("#signup-submit").click(function() {
-    alert("clicked")
     var firstname = $("#first-name").val();
     var lastname = $("#last-name").val();
     var pin = $("#pin").val();
@@ -279,7 +278,8 @@ $(document).ready(function() {
         data: { "firstname": firstname, "lastname": lastname, "pin" : pin }
       }).done(function(msg) {
         console.log(msg);
-        alert("Account created")
+        alert("Account created!");
+        window.location.replace("/" + msg);
       });
     }
   });
@@ -298,20 +298,20 @@ $(document).ready(function() {
 			  data: { "pin": pin, "username": id }
 			}).done(function(msg) {
 			    if (msg["status"] && !msg["locked"]) {
-			    	alert("Welcome back, " + msg.userdata.firstname + "!")
+            $("#user-firstname").html("Welcome back, " + msg.userdata.firstname + ".");
             user_info = msg.userdata;
             rels = user_info.user_info.rels;
+            console.log(rels)
             current_username = user_info.username;
-            console.log(rels);
-            if (rels.length > 0) {
-              $("#login-container").hide(function() {
-                $("video").hide();
-                $("#all-rels").show();
-                $("#rel-graph").show();
-              })
-              updateGraph();
-              updateRels();
-            }
+
+            $("#login-container").hide(function() {
+              $("video").hide();
+              $("#all-rels").show();
+              $("#rel-graph").show();
+            })
+            updateGraph();
+            updateRels();
+
 			    } else if (!msg["status"] && !msg["locked"]) {
 			    	console.log("Incorrect pin!");
 			    	document.getElementById("msg").innerHTML = msg["reason"];
@@ -459,7 +459,7 @@ $(document).ready(function() {
 
           updateRels();
           updateGraph();
-          updateInteractionGraph()
+          updateInteractionGraph();
         }
       });
     }
@@ -613,6 +613,7 @@ $(document).ready(function() {
 
   function updateLendingTable() {
     var lends = rels[selected_name_index]["lend"];
+    console.log(rels[selected_name_index]);
     if (lends.length > 0) {
       $("#lending-tbody").html("");
       lends.forEach(function(item) {
@@ -631,12 +632,14 @@ $(document).ready(function() {
   function removeLentItem(item) {
     var remove_item = $(item).parent().parent().find("td:first-child").text();
     console.log(remove_item)
+    var lend_arr_temp = rels[selected_name_index]["lend"];
     for (var i = 0; i < rels[selected_name_index]["lend"].length; i++) {
       if (remove_item == rels[selected_name_index]["lend"][i].item) {
         console.log("now")
-        rels[selected_name_index]["lend"].splice(i, 1);
+        lend_arr_temp.splice(i, 1);
       }
     }
+    rels[selected_name_index]["lend"] = lend_arr_temp;
     $.ajax({
       method: "POST",
       url: "/update-relation",

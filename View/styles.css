@@ -7,6 +7,10 @@
   font-weight: bolder;
 }
 
+#create-an-account input {
+  color: black;
+}
+
 .empty-graph {
   background-color: #E9E9E9;
   width: 600px;
@@ -80,7 +84,6 @@
   display: inline;
 }
 
-
 .bubble {
   float: left;
   list-style-type: none;
@@ -95,12 +98,6 @@
   font-size: 30px;
 }
 
-.flashing-bubble {
-  animation-duration: 0.4s;
-  animation-name: flash;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-}
 
 #intr-table {
   display: none;
@@ -114,18 +111,27 @@
   min-height: 100%;
 }
 
+#guest-video {
+  margin-top: 100px;
+}
+
 #create-an-account-container, #login-container {
   position: absolute;
   margin-left: 50%;
   margin-top: 10%;
   margin-right: 10%;
-
 }
 
-#guest-redirect {
-  top: 10px;
-  right: 10px;
-  position: absolute;
+#login-box label, h1 {
+  color: white;
+  font-weight: bolder;
+}
+
+#user-firstname {
+  color: black;
+}
+
+.redirect {
   background-color: transparent;
   border: 2px solid lightblue;
   width: 250px;
@@ -136,6 +142,41 @@
   transition-duration: 0.3s;
 }
 
+#home-redirect-wrapper {
+  margin-left: 50%;
+  margin-right: 50%;
+}
+
+#home-redirect {
+  margin: auto;
+  display: block;
+}
+
+#guest-redirect {
+  top: 10px;
+  right: 10px;
+  position: absolute;
+
+}
+
+@keyframes flash {
+  from {
+    width: 250px;
+    height: 40px;
+  }
+  to {
+    width: 300px;
+    height: 48px;
+  }
+}
+
+.flashing-redirect {
+  animation-duration: 0.4s;
+  animation-name: flash;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
 #guest-redirect:hover {
   border: 2px solid lightblue;
   background-color: lightgreen;
@@ -144,4 +185,29 @@
 
 #lending-table {
   display: none;
+}
+
+thead td {
+  color: white;
+  background-color: blue;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  text-align: left;
+}
+
+table tr:hover {
+  background-color: #ddd;
+}
+
+td {
+  border: 1px solid black;
+  padding: 12px;
+}
+
+#admin-table {
+  display: none;
+}
+
+html {
+  margin: 10px;
 }

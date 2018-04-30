@@ -27,19 +27,21 @@
 
     <div id="login-container">
       <div id="login-box">
-
-  			<p>Enter your pin:</p>
+        <h1>Welcome Back</h1>
+        <br>
+        <label for="pin-input">PIN</label>
   			<input type="text" maxlength="4" id="pin-input" pattern="\d{4}" required/>
-  			<input id="pin-submit" type="submit" value="Submit">
-  			<p id="msg"></p>
+  			<button id="pin-submit" type="button" class="btn">Log in</button>
   		</div>
     </div>
 
-
+    <h1 id="user-firstname">Welcome Back</h1>
+    <h3>Hover over the circles below to view basic info about your relationships.</h3>
+    <h3>Click to view a plot of your relationship score over time</h3>
+    <button type="button" class="btn btn-primary" id="new-rel-btn">Add new relationship</button>
     <div id="all-rels" class="text-center">
       <ul id="all-rels-ul"></ul>
-      <br>
-      <button type="button" class="btn btn-primary" id="new-rel-btn"></button>
+
     </div>
 
 

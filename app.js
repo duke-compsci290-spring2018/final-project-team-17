@@ -42,25 +42,10 @@ app.get('/admin',function(req, res){
 });
 
 
-// app.get("/:userid", function(req, res) {
-//   db.collection("users").findOne({ "username": req.params.userid }, function(err, doc) {
-//     if (err) {
-//       handleError(res, err.message, "Failed to get user");
-//     } else {
-//       if (doc == null) {
-//         console.log("User not found");
-//       } else {
-//         res.sendFile(__dirname + '/View/login.html');
-//       }
-//     }
-//   });
-// });
-
 app.post("/create-account", function(req, res) {
   var firstname = req.body.firstname;
   var lastname = req.body.lastname;
   var pin = req.body.pin;
-  // var code = new ObjectID();
   var id = firstname[0] + lastname[0] + shortid.generate();
   var user_info = {
     rels: []
@@ -81,7 +66,7 @@ app.get("/:userid", function(req, res) {
       handleError(res, err.message, "Failed to get user");
     } else {
       if (doc == null) {
-        console.log("User not found");
+        console.log("User not found when searching for user id");
       } else {
         res.sendFile(__dirname + '/View/login.html');
       }
@@ -92,13 +77,13 @@ app.get("/:userid", function(req, res) {
 app.post("/login", function(req, res) {
   var pin = req.body.pin;
   var username = req.body.username;
-  console.log(username)
+  console.log("Login detected, attempting to login " + username)
   db.collection("users").findOne({username : username}, function(err, doc) {
+    console.log("User found, validating...");
     if (err) {
       console.log("Error in login. User not found.");
       process.exit(1);
     } else {
-        console.log(doc)
         var newDoc = doc;
         if (doc["pin"] == pin && !doc["locked"]) {
 
@@ -106,11 +91,12 @@ app.post("/login", function(req, res) {
           newDoc["last-login"] = new Date();
           newDoc["failed-login-attempts"] = 0;
           db.collection("users").updateOne({_id : doc["_id"]}, newDoc, function(err, data) {
+            console.log("Updating user...")
             if (err) {
               console.log("There was an error updating a record " + err);
               res.send({"status": false, "reason": "Unknown error.", "locked" : false})
             } else {
-              console.log(newDoc);
+              console.log("logged in")
               res.send({"status": true, "reason": "Successful login.", "locked": false, "login-diff" : diff, "userdata": doc});
             }
           });
@@ -134,13 +120,13 @@ app.post("/login", function(req, res) {
               });
             } else {
               newDoc["locked"] = false;
+              console.log("Incorrect PIN...")
               var attemptsRemaining = 3 - (attempts + 1);
               db.collection("users").updateOne({_id : doc["_id"]}, newDoc, function(err, data) {
                 if (err) {
                   console.log("There was an error updating a record " + err);
                   res.send({"status": false, "reason": "Unknown error.", "locked" : false})
                 } else {
-                  console.log(newDoc);
                   var msg = "Incorrect PIN. " + attemptsRemaining + " attempts remaining.";
                   res.send({"status": false, "reason": msg, "locked": false});
                 }
@@ -159,7 +145,6 @@ app.post("/admin-login", function(req, res) {
       console.log("Error in login. Admin not found.");
       process.exit(1);
     } else {
-        console.log(doc)
         var newDoc = doc;
         if (doc["pin"] == pin) {
           db.collection("users").find({}).toArray(function (err, docs) {
@@ -178,7 +163,6 @@ app.post("/new-relation", function(req, res) {
   var rel_name = req.body.name;
   var rel_relation = req.body.relation;
   var rel_usn = req.body.username;
-  console.log(rel_usn)
   db.collection("users").findOne({ "username":  rel_usn}, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to get user");
@@ -206,7 +190,6 @@ app.post("/new-relation", function(req, res) {
             console.log("There was an error updating a record " + err);
             res.send({"success": false, "msg": "Failed to add new relation!"})
           } else {
-            console.log(doc);
             res.send({"success": true, "msg": "New relation successfully added!", "user_info": data});
           }
         });
@@ -218,7 +201,6 @@ app.post("/new-relation", function(req, res) {
 app.post("/update-relation", function(req, res) {
   var rel_usn = req.body.username;
   var updated_rels = req.body.doc;
-  console.log(rel_usn)
   db.collection("users").findOne({"username":  rel_usn}, function(err, doc) {
     if (err) {
       handleError(res, err.message, "Failed to get user");
@@ -229,7 +211,6 @@ app.post("/update-relation", function(req, res) {
         doc.user_info.rels = updated_rels;
         var return_doc = doc;
         db.collection("users").updateOne({_id : doc["_id"]}, doc, function(err, data) {
-          console.log("DATA: ", data)
           if (err) {
             console.log("There was an error updating a record " + err);
             res.send({"success": false, "msg": "Failed to schedule interaction"})
@@ -244,7 +225,7 @@ app.post("/update-relation", function(req, res) {
 
 app.post("/unlock-user", function(req, res) {
   var lock_user = req.body.username;
-  lock_status = req.body.lock_status = "false" ? false : true;
+  lock_status = req.body.lock_status;
   var lock_status = req.body.lock_status;
   db.collection("users").findOne({"username":  lock_user}, function(err, doc) {
     if (err) {

@@ -3,32 +3,6 @@ var users;
 var usn;
 var pin = 0;
 
-function toggleLock(user) {
-  usn = $(user).parent().parent().find("td:first-child").text();
-  users.forEach(function(user) {
-    if (usn == user.username) {
-      console.log(user)
-      if (user.locked) {
-        user.locked = false;
-      } else {
-        user.locked = true;
-      }
-      $.ajax({
-        method: "POST",
-        url: "/unlock-user",
-        data: { "username": usn, "lock_status": user.locked }
-      }).done(function(msg) {
-          if (msg["status"]) {
-            alert(msg.msg)
-            getUsers();
-          } else {
-            alert(msg.msg)
-          }
-      });
-    }
-  })
-}
-
 function deleteUser(user) {
   usn = $(user).parent().parent().find("td:first-child").text();
 }
@@ -48,19 +22,22 @@ $(document).ready(function() {
   	})
 
     function fillUserTable() {
-      
+
       users.forEach(function(user) {
         var lock_str;
-
-        if (user.locked == false) {
-          lock_str = "Lock user";
-        } else {
+        if (user.locked) {
           lock_str = "Unlock user";
+        } else {
+          lock_str = "Lock user";
         }
-
-        $("#admin-tbody").append("<tr><td>" + user.username + "</td><td><button type='button' class='btn btn-secondary' onclick='toggleLock(this)'>" + lock_str + "</button></td><td><button type='button' class='btn btn-danger' onclick='deleteUser(this)'>Delete User</button></td></tr>")
+        $("#admin-tbody").append("<tr><td>" + user.username + "</td><td><button class='lock_toggle_btn' type='button' class='btn btn-secondary'>" + lock_str + "</button></td><td><button type='button' class='btn btn-danger' onclick='deleteUser(this)'>Delete User</button></td></tr>")
       })
+      $("#admin-table").show();
     }
+
+    $(document).on('click', '.lock_toggle_btn', function(event) {
+      toggleLock(event.target);
+    })
 
     function getUsers() {
       $.ajax({
@@ -76,6 +53,32 @@ $(document).ready(function() {
             alert("Login failed!");
           }
       });
+    }
+
+    function toggleLock(user) {
+      usn = $(user).parent().parent().find("td:first-child").text();
+      users.forEach(function(user) {
+        if (usn == user.username) {
+          console.log(user.locked)
+          if (user.locked) {
+            user.locked = false;
+          } else {
+            user.locked = true;
+          }
+          $.ajax({
+            method: "POST",
+            url: "/unlock-user",
+            data: { "username": usn, "lock_status": user.locked }
+          }).done(function(msg) {
+              if (msg["status"]) {
+                alert(msg.msg)
+                getUsers();
+              } else {
+                alert(msg.msg)
+              }
+          });
+        }
+      })
     }
 
 
